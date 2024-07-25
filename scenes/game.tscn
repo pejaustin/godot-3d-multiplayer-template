@@ -1,0 +1,37 @@
+[gd_scene load_steps=4 format=3 uid="uid://c7jxb55veskqd"]
+
+[ext_resource type="PackedScene" uid="uid://btjx4a4g25xj3" path="res://scenes/network/multiplayer_manager.tscn" id="1_sg3yj"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_lpk0h"]
+size = Vector2(20, 20)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_iptoq"]
+data = PackedVector3Array(5, 0, 5, -5, 0, 5, 5, 0, -5, -5, 0, 5, -5, 0, -5, 5, 0, -5)
+
+[node name="Game" type="Node3D"]
+
+[node name="PlayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://scenes/player/player.tscn")
+spawn_path = NodePath("../World/PlayerSpawnPoint")
+
+[node name="MultiplayerManager" parent="." node_paths=PackedStringArray("_player_spawn_point") instance=ExtResource("1_sg3yj")]
+_player_spawn_point = NodePath("../World/PlayerSpawnPoint")
+
+[node name="World" type="Node3D" parent="."]
+
+[node name="Atmosphere" type="Node3D" parent="World"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="World/Atmosphere"]
+transform = Transform3D(1, 0, 0, 0, 0.696001, 0.718041, 0, -0.718041, 0.696001, 0, 4.69122, 6.19946)
+
+[node name="MapSpawnPoint" type="Node3D" parent="World"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/MapSpawnPoint"]
+mesh = SubResource("PlaneMesh_lpk0h")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="World/MapSpawnPoint/MeshInstance3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/MapSpawnPoint/MeshInstance3D/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_iptoq")
+
+[node name="PlayerSpawnPoint" type="Node3D" parent="World"]
