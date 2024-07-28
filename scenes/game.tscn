@@ -1,12 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://c7jxb55veskqd"]
+[gd_scene load_steps=5 format=3 uid="uid://c7jxb55veskqd"]
 
 [ext_resource type="PackedScene" uid="uid://btjx4a4g25xj3" path="res://scenes/network/multiplayer_manager.tscn" id="1_sg3yj"]
+[ext_resource type="Material" uid="uid://dtbe06c2i0ktm" path="res://asssets/world/world_material.tres" id="2_xgt50"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_lpk0h"]
+material = ExtResource("2_xgt50")
 size = Vector2(20, 20)
 
-[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_iptoq"]
-data = PackedVector3Array(5, 0, 5, -5, 0, 5, 5, 0, -5, -5, 0, 5, -5, 0, -5, 5, 0, -5)
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_ivsg0"]
+data = PackedVector3Array(10, 0, 10, -10, 0, 10, 10, 0, -10, -10, 0, 10, -10, 0, -10, 10, 0, -10)
 
 [node name="Game" type="Node3D"]
 
@@ -30,8 +32,9 @@ transform = Transform3D(1, 0, 0, 0, 0.696001, 0.718041, 0, -0.718041, 0.696001, 
 mesh = SubResource("PlaneMesh_lpk0h")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="World/MapSpawnPoint/MeshInstance3D"]
+collision_layer = 3
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="World/MapSpawnPoint/MeshInstance3D/StaticBody3D"]
-shape = SubResource("ConcavePolygonShape3D_iptoq")
+shape = SubResource("ConcavePolygonShape3D_ivsg0")
 
 [node name="PlayerSpawnPoint" type="Node3D" parent="World"]

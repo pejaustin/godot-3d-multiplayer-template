@@ -1,22 +1,77 @@
-[gd_scene load_steps=4 format=3 uid="uid://xjygpllvas2q"]
+[gd_scene load_steps=11 format=3 uid="uid://xjygpllvas2q"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_ec1jl"]
+[ext_resource type="PackedScene" uid="uid://l1d8hwvn7hbq" path="res://scenes/player/camera_input.tscn" id="2_24wjx"]
+[ext_resource type="Script" path="res://scripts/player_input.gd" id="2_e03e3"]
+[ext_resource type="PackedScene" uid="uid://bm8lghfnhhvcm" path="res://scenes/player/player_controller.tscn" id="2_gjj5r"]
+[ext_resource type="PackedScene" uid="uid://cxjk8dd2j2a0y" path="res://scenes/player/military_male.tscn" id="4_fvytd"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_5lwcq"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath("MeshInstance3D:rotation")
+properties/1/spawn = false
+properties/1/replication_mode = 0
+properties/2/path = NodePath(".:orientation")
+properties/2/spawn = true
+properties/2/replication_mode = 1
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_lqghn"]
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ihjgv"]
+[sub_resource type="BoxMesh" id="BoxMesh_g241p"]
+size = Vector3(1, 0.25, 1)
 
-[node name="Player" type="CharacterBody3D"]
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ihjgv"]
+radius = 0.35
+height = 2.8
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_q0qjg"]
+properties/0/path = NodePath(".:input_dir")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:jump_input")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:run_input")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("_player_input", "_player_controller", "_camera_input", "_player_model")]
 script = ExtResource("1_ec1jl")
+_player_input = NodePath("PlayerInput")
+_player_controller = NodePath("PlayerController")
+_camera_input = NodePath("CameraInput")
+_player_model = NodePath("MilitaryMale")
+
+[node name="PlayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_5lwcq")
+
+[node name="PlayerController" parent="." node_paths=PackedStringArray("_player_ref", "_camera_input", "_player_input", "_player_model") instance=ExtResource("2_gjj5r")]
+_player_ref = NodePath("..")
+_camera_input = NodePath("../CameraInput")
+_player_input = NodePath("../PlayerInput")
+_player_model = NodePath("../MilitaryMale")
+
+[node name="CameraInput" parent="." instance=ExtResource("2_24wjx")]
+
+[node name="MilitaryMale" parent="." instance=ExtResource("4_fvytd")]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, 1, 2.08165e-12)
+visible = false
 mesh = SubResource("CapsuleMesh_lqghn")
 
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.581955, -0.48129)
+mesh = SubResource("BoxMesh_g241p")
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, 1, 2.08165e-12)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, 1.41129, 2.08165e-12)
 shape = SubResource("CapsuleShape3D_ihjgv")
 
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.911604, 0.411069, 0, -0.411069, 0.911604, 0, 4.00394, 4.27758)
-current = true
+[node name="PlayerInput" type="Node" parent="."]
+script = ExtResource("2_e03e3")
+
+[node name="InputSynchronizer" type="MultiplayerSynchronizer" parent="PlayerInput"]
+replication_config = SubResource("SceneReplicationConfig_q0qjg")
