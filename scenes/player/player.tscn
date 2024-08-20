@@ -1,21 +1,21 @@
-[gd_scene load_steps=11 format=3 uid="uid://xjygpllvas2q"]
+[gd_scene load_steps=14 format=3 uid="uid://xjygpllvas2q"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_ec1jl"]
 [ext_resource type="PackedScene" uid="uid://l1d8hwvn7hbq" path="res://scenes/player/camera_input.tscn" id="2_24wjx"]
 [ext_resource type="Script" path="res://scripts/player_input.gd" id="2_e03e3"]
 [ext_resource type="PackedScene" uid="uid://bm8lghfnhhvcm" path="res://scenes/player/player_controller.tscn" id="2_gjj5r"]
 [ext_resource type="PackedScene" uid="uid://cxjk8dd2j2a0y" path="res://scenes/player/military_male.tscn" id="4_fvytd"]
+[ext_resource type="PackedScene" uid="uid://dasuy8afc1360" path="res://scenes/player/states/idle.tscn" id="6_oejyl"]
+[ext_resource type="PackedScene" uid="uid://croqoq2vra1tx" path="res://scenes/player/states/state_machine.tscn" id="6_q40uo"]
+[ext_resource type="PackedScene" uid="uid://bqcvbbbfrkhau" path="res://scenes/player/states/move.tscn" id="8_e56u5"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_5lwcq"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 1
-properties/1/path = NodePath("MeshInstance3D:rotation")
-properties/1/spawn = false
-properties/1/replication_mode = 0
-properties/2/path = NodePath(".:orientation")
-properties/2/spawn = true
-properties/2/replication_mode = 1
+properties/1/path = NodePath(".:orientation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_lqghn"]
 
@@ -37,12 +37,13 @@ properties/2/path = NodePath(".:run_input")
 properties/2/spawn = true
 properties/2/replication_mode = 1
 
-[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("_player_input", "_player_controller", "_camera_input", "_player_model")]
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("_player_input", "_player_controller", "_camera_input", "_player_model", "_movement_sm")]
 script = ExtResource("1_ec1jl")
 _player_input = NodePath("PlayerInput")
 _player_controller = NodePath("PlayerController")
 _camera_input = NodePath("CameraInput")
 _player_model = NodePath("MilitaryMale")
+_movement_sm = NodePath("MovementSM")
 
 [node name="PlayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_5lwcq")
@@ -75,3 +76,15 @@ script = ExtResource("2_e03e3")
 
 [node name="InputSynchronizer" type="MultiplayerSynchronizer" parent="PlayerInput"]
 replication_config = SubResource("SceneReplicationConfig_q0qjg")
+
+[node name="MovementSM" parent="." node_paths=PackedStringArray("starting_state", "_player_input_move_component") instance=ExtResource("6_q40uo")]
+starting_state = NodePath("Idle")
+_player_input_move_component = NodePath("../PlayerInput")
+
+[node name="Idle" parent="MovementSM" node_paths=PackedStringArray("_move_state") instance=ExtResource("6_oejyl")]
+_move_state = NodePath("../Move")
+
+[node name="Move" parent="MovementSM" node_paths=PackedStringArray("_idle_state", "_camera_input", "_player_model") instance=ExtResource("8_e56u5")]
+_idle_state = NodePath("../Idle")
+_camera_input = NodePath("../../CameraInput")
+_player_model = NodePath("../../MilitaryMale")
