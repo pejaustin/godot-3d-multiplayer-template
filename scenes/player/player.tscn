@@ -1,22 +1,16 @@
-[gd_scene load_steps=15 format=3 uid="uid://xjygpllvas2q"]
+[gd_scene load_steps=16 format=3 uid="uid://xjygpllvas2q"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_ec1jl"]
 [ext_resource type="PackedScene" uid="uid://l1d8hwvn7hbq" path="res://scenes/player/camera_input.tscn" id="2_24wjx"]
 [ext_resource type="Script" path="res://scripts/player_input.gd" id="2_e03e3"]
 [ext_resource type="PackedScene" uid="uid://cxjk8dd2j2a0y" path="res://scenes/player/military_male.tscn" id="4_fvytd"]
+[ext_resource type="Script" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="5_5f316"]
 [ext_resource type="PackedScene" uid="uid://dasuy8afc1360" path="res://scenes/player/states/idle.tscn" id="6_oejyl"]
 [ext_resource type="PackedScene" uid="uid://croqoq2vra1tx" path="res://scenes/player/states/state_machine.tscn" id="6_q40uo"]
+[ext_resource type="Script" path="res://addons/netfox/tick-interpolator.gd" id="6_vruc8"]
 [ext_resource type="PackedScene" uid="uid://bqcvbbbfrkhau" path="res://scenes/player/states/move.tscn" id="8_e56u5"]
 [ext_resource type="PackedScene" uid="uid://3yvsj1d1ndbd" path="res://scenes/player/states/jump.tscn" id="9_vqiu1"]
 [ext_resource type="PackedScene" uid="uid://bv1rwy4y0lx7t" path="res://scenes/player/states/fall.tscn" id="10_0voet"]
-
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_5lwcq"]
-properties/0/path = NodePath(".:position")
-properties/0/spawn = true
-properties/0/replication_mode = 1
-properties/1/path = NodePath(".:orientation")
-properties/1/spawn = true
-properties/1/replication_mode = 1
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_lqghn"]
 
@@ -29,8 +23,8 @@ height = 2.8
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_q0qjg"]
 properties/0/path = NodePath(".:input_dir")
-properties/0/spawn = true
-properties/0/replication_mode = 1
+properties/0/spawn = false
+properties/0/replication_mode = 0
 properties/1/path = NodePath(".:jump_input")
 properties/1/spawn = true
 properties/1/replication_mode = 1
@@ -44,9 +38,6 @@ _player_input = NodePath("PlayerInput")
 _camera_input = NodePath("CameraInput")
 _player_model = NodePath("MilitaryMale")
 _movement_sm = NodePath("MovementSM")
-
-[node name="PlayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_5lwcq")
 
 [node name="CameraInput" parent="." instance=ExtResource("2_24wjx")]
 
@@ -70,6 +61,17 @@ script = ExtResource("2_e03e3")
 
 [node name="InputSynchronizer" type="MultiplayerSynchronizer" parent="PlayerInput"]
 replication_config = SubResource("SceneReplicationConfig_q0qjg")
+
+[node name="RollbackSynchronizer" type="Node" parent="." node_paths=PackedStringArray("root")]
+script = ExtResource("5_5f316")
+root = NodePath("..")
+state_properties = Array[String]([":global_transform", "MilitaryMale:global_transform", ":velocity"])
+input_properties = Array[String](["PlayerInput:input_dir"])
+
+[node name="TickInterpolator" type="Node" parent="." node_paths=PackedStringArray("root")]
+script = ExtResource("6_vruc8")
+root = NodePath("..")
+properties = Array[String]([":position", "MilitaryMale:global_transform"])
 
 [node name="MovementSM" parent="." node_paths=PackedStringArray("starting_state") instance=ExtResource("6_q40uo")]
 starting_state = NodePath("Idle")
