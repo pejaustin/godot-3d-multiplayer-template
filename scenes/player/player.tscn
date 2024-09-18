@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://xjygpllvas2q"]
+[gd_scene load_steps=15 format=3 uid="uid://xjygpllvas2q"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_ec1jl"]
 [ext_resource type="PackedScene" uid="uid://l1d8hwvn7hbq" path="res://scenes/player/camera_input.tscn" id="2_24wjx"]
@@ -21,25 +21,20 @@ size = Vector3(1, 0.25, 1)
 radius = 0.35
 height = 2.8
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_q0qjg"]
-properties/0/path = NodePath(".:input_dir")
-properties/0/spawn = false
-properties/0/replication_mode = 0
-properties/1/path = NodePath(".:jump_input")
-properties/1/spawn = true
-properties/1/replication_mode = 1
-properties/2/path = NodePath(".:run_input")
-properties/2/spawn = true
-properties/2/replication_mode = 1
-
-[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("_player_input", "_camera_input", "_player_model", "_movement_sm")]
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("_player_input", "_camera_input", "_player_model", "_movement_sm", "current_state", "_idle_state", "_move_state", "_jump_state", "_fall_state")]
 script = ExtResource("1_ec1jl")
 _player_input = NodePath("PlayerInput")
 _camera_input = NodePath("CameraInput")
 _player_model = NodePath("MilitaryMale")
 _movement_sm = NodePath("MovementSM")
+current_state = NodePath("MovementSM/Idle")
+_idle_state = NodePath("MovementSM/Idle")
+_move_state = NodePath("MovementSM/Move")
+_jump_state = NodePath("MovementSM/Jump")
+_fall_state = NodePath("MovementSM/Fall")
 
-[node name="CameraInput" parent="." instance=ExtResource("2_24wjx")]
+[node name="CameraInput" parent="." node_paths=PackedStringArray("rollback_synchronizer") instance=ExtResource("2_24wjx")]
+rollback_synchronizer = NodePath("../RollbackSynchronizer")
 
 [node name="MilitaryMale" parent="." instance=ExtResource("4_fvytd")]
 
@@ -59,51 +54,38 @@ shape = SubResource("CapsuleShape3D_ihjgv")
 [node name="PlayerInput" type="Node" parent="."]
 script = ExtResource("2_e03e3")
 
-[node name="InputSynchronizer" type="MultiplayerSynchronizer" parent="PlayerInput"]
-replication_config = SubResource("SceneReplicationConfig_q0qjg")
-
 [node name="RollbackSynchronizer" type="Node" parent="." node_paths=PackedStringArray("root")]
 script = ExtResource("5_5f316")
 root = NodePath("..")
-state_properties = Array[String]([":global_transform", "MilitaryMale:global_transform", ":velocity"])
-input_properties = Array[String](["PlayerInput:input_dir"])
+state_properties = Array[String]([":transform", ":velocity", "MilitaryMale:transform"])
+input_properties = Array[String](["PlayerInput:input_dir", "PlayerInput:jump_input", "PlayerInput:run_input", "CameraInput:camera_basis"])
 
 [node name="TickInterpolator" type="Node" parent="." node_paths=PackedStringArray("root")]
 script = ExtResource("6_vruc8")
 root = NodePath("..")
-properties = Array[String]([":position", "MilitaryMale:global_transform"])
+properties = Array[String]([":transform", "MilitaryMale:transform"])
 
-[node name="MovementSM" parent="." node_paths=PackedStringArray("starting_state") instance=ExtResource("6_q40uo")]
-starting_state = NodePath("Idle")
+[node name="MovementSM" parent="." instance=ExtResource("6_q40uo")]
 
-[node name="Idle" parent="MovementSM" node_paths=PackedStringArray("_move_state", "_jump_state", "_fall_state", "camera_input", "player_model") instance=ExtResource("6_oejyl")]
-_move_state = NodePath("../Move")
-_jump_state = NodePath("../Jump")
-_fall_state = NodePath("../Fall")
+[node name="Idle" parent="MovementSM" node_paths=PackedStringArray("camera_input", "player_model") instance=ExtResource("6_oejyl")]
 animation_name = "male_animation_lib/idle"
 state_name = "Idle"
 camera_input = NodePath("../../CameraInput")
 player_model = NodePath("../../MilitaryMale")
 
-[node name="Move" parent="MovementSM" node_paths=PackedStringArray("_idle_state", "_jump_state", "_fall_state", "camera_input", "player_model") instance=ExtResource("8_e56u5")]
-_idle_state = NodePath("../Idle")
-_jump_state = NodePath("../Jump")
-_fall_state = NodePath("../Fall")
+[node name="Move" parent="MovementSM" node_paths=PackedStringArray("camera_input", "player_model") instance=ExtResource("8_e56u5")]
 animation_name = "male_animation_lib/walk"
 state_name = "Move"
 camera_input = NodePath("../../CameraInput")
 player_model = NodePath("../../MilitaryMale")
 
-[node name="Jump" parent="MovementSM" node_paths=PackedStringArray("_move_state", "_fall_state", "camera_input", "player_model") instance=ExtResource("9_vqiu1")]
-_move_state = NodePath("../Move")
-_fall_state = NodePath("../Fall")
+[node name="Jump" parent="MovementSM" node_paths=PackedStringArray("camera_input", "player_model") instance=ExtResource("9_vqiu1")]
 animation_name = "male_animation_lib/jump"
 state_name = "Jump"
 camera_input = NodePath("../../CameraInput")
 player_model = NodePath("../../MilitaryMale")
 
-[node name="Fall" parent="MovementSM" node_paths=PackedStringArray("_move_state", "camera_input", "player_model") instance=ExtResource("10_0voet")]
-_move_state = NodePath("../Move")
+[node name="Fall" parent="MovementSM" node_paths=PackedStringArray("camera_input", "player_model") instance=ExtResource("10_0voet")]
 animation_name = "male_animation_lib/jump"
 state_name = "Fall"
 camera_input = NodePath("../../CameraInput")
