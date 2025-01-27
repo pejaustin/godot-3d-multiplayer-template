@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://f7a8vjj11u4c"
-path="res://.godot/imported/SuperNormal-xRoj5.ttf-759e741e9fec885e8dc62439ab15963b.fontdata"
+uid="uid://cf21bpdnncupb"
+path="res://.godot/imported/SuperNormal.ttf-daa1728e24b652c5d299f267ce0f55dd.fontdata"
 
 [deps]
 
-source_file="res://asssets/ui/SuperNormal-xRoj5.ttf"
-dest_files=["res://.godot/imported/SuperNormal-xRoj5.ttf-759e741e9fec885e8dc62439ab15963b.fontdata"]
+source_file="res://asssets/ui/SuperNormal.ttf"
+dest_files=["res://.godot/imported/SuperNormal.ttf-daa1728e24b652c5d299f267ce0f55dd.fontdata"]
 
 [params]
 
@@ -28,7 +28,12 @@ Fallbacks=null
 fallbacks=[]
 Compress=null
 compress=true
-preload=[]
+preload=[{
+"chars": [],
+"glyphs": [],
+"name": "New Configuration",
+"size": Vector2i(16, 0)
+}]
 language_support={}
 script_support={}
 opentype_features={}
