@@ -48,3 +48,8 @@ func get_run() -> bool:
 	
 func get_jump() -> float:
 	return player_input.jump_input
+
+func get_attack() -> bool:
+	return player_input.attack_input
+	
+	

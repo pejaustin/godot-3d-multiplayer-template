@@ -10,6 +10,8 @@ func tick(delta, tick, is_fresh):
 			state_machine.transition(&"IdleState")
 		elif get_jump():
 			state_machine.transition(&"JumpState")
+		elif get_attack():
+			state_machine.transition(&"AttackState")
 	else:
 		state_machine.transition(&"FallState")
 

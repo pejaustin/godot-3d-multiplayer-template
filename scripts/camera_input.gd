@@ -8,9 +8,10 @@ class_name CameraInput extends Node3D
 var camera_basis : Basis = Basis.IDENTITY
 
 const CAMERA_MOUSE_ROTATION_SPEED := 0.001
-const CAMERA_X_ROT_MIN := deg_to_rad(-89.9)
-const CAMERA_X_ROT_MAX := deg_to_rad(70)
+const CAMERA_X_ROT_MIN := deg_to_rad(-70)
+const CAMERA_X_ROT_MAX := deg_to_rad(60)
 const CAMERA_UP_DOWN_MOVEMENT = -1
+const CAMERA_JOYSTICK_ROTATION_SPEED := 5
 
 func _ready():
 	NetworkTime.before_tick_loop.connect(_gather)
@@ -28,11 +29,28 @@ func _input(event):
 	if event is InputEventMouseMotion:
 		rotate_camera(event.relative * CAMERA_MOUSE_ROTATION_SPEED)
 
+func get_input_joystick(delta):
+	# Rotate outer gimbal around y axis
+	var y_rotation = Input.get_axis("camera_left", "camera_right")
+	var x_rotation = Input.get_axis("camera_up", "camera_down")
+	var total = Input.get_vector("camera_left", "camera_right", "camera_up", "camera_down")
+	if total.y != 0:
+		print(total)
+	rotate_camera(total * CAMERA_JOYSTICK_ROTATION_SPEED * delta)
+	
+		
+
+func _process(delta: float) -> void:
+	get_input_joystick(delta)
+	
+
 func rotate_camera(move):
+	
+	
 	# Horizontal camera movement
 	# Currently, we only care to synch horizontal rotation, vertical camera changes are only for local client.
 	camera_mount.rotate_y(-move.x)
-	camera_mount.orthonormalize()
+	#camera_mount.orthonormalize()
 	
 	# Vertical camera movement
 	camera_rot.rotation.x = clamp(camera_rot.rotation.x + (CAMERA_UP_DOWN_MOVEMENT * move.y), CAMERA_X_ROT_MIN, CAMERA_X_ROT_MAX)
