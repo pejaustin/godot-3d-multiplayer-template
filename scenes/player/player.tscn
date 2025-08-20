@@ -1,17 +1,16 @@
-[gd_scene load_steps=14 format=3 uid="uid://xjygpllvas2q"]
+[gd_scene load_steps=13 format=3 uid="uid://xjygpllvas2q"]
 
-[ext_resource type="Script" uid="uid://mnivl84pu72n" path="res://scripts/player.gd" id="1_hkxbp"]
+[ext_resource type="Script" uid="uid://bkgyb5d5m4se0" path="res://scripts/player.gd" id="1_hkxbp"]
 [ext_resource type="PackedScene" uid="uid://l1d8hwvn7hbq" path="res://scenes/player/camera_input.tscn" id="2_24wjx"]
-[ext_resource type="Script" uid="uid://djx3cqym0uk4p" path="res://scripts/player_input.gd" id="2_e03e3"]
+[ext_resource type="Script" uid="uid://b4vv0uthpt8nf" path="res://scripts/player_input.gd" id="2_e03e3"]
 [ext_resource type="PackedScene" uid="uid://cxjk8dd2j2a0y" path="res://scenes/player/military_male.tscn" id="4_fvytd"]
-[ext_resource type="Script" uid="uid://bea1d1slm6w13" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="5_sf48l"]
-[ext_resource type="Script" uid="uid://b7oa4ayv2vxjh" path="res://addons/netfox/tick-interpolator.gd" id="6_rwdl2"]
-[ext_resource type="Script" uid="uid://d04xdfwj2uo4c" path="res://addons/netfox.extras/state-machine/rewindable-state-machine.gd" id="7_b1gbo"]
-[ext_resource type="Script" uid="uid://yfatu2iwpl7h" path="res://scripts/states/movement/idle_state.gd" id="8_lfiis"]
-[ext_resource type="Script" uid="uid://bctgki3xr1key" path="res://scripts/states/movement/move_state.gd" id="9_yw7u2"]
-[ext_resource type="Script" uid="uid://bs4xi41onpeg0" path="res://scripts/states/movement/jump_state.gd" id="10_ak1iu"]
-[ext_resource type="Script" uid="uid://5tf6m4rmajj3" path="res://scripts/states/movement/fall_state.gd" id="11_28r1c"]
-[ext_resource type="Script" uid="uid://cgveuo7p8gjcq" path="res://scenes/player/attack_state.gd" id="12_fm80t"]
+[ext_resource type="Script" uid="uid://csux4n83qhbue" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="5_sf48l"]
+[ext_resource type="Script" uid="uid://h66ntnhws4ae" path="res://addons/netfox/tick-interpolator.gd" id="6_rwdl2"]
+[ext_resource type="Script" uid="uid://c5oy5ps2bt7hb" path="res://addons/netfox.extras/state-machine/rewindable-state-machine.gd" id="7_b1gbo"]
+[ext_resource type="Script" uid="uid://o4nlc4njxl0i" path="res://scripts/states/movement/idle_state.gd" id="8_lfiis"]
+[ext_resource type="Script" uid="uid://bse11sjrcympt" path="res://scripts/states/movement/move_state.gd" id="9_yw7u2"]
+[ext_resource type="Script" uid="uid://blikma28g5cv" path="res://scripts/states/movement/jump_state.gd" id="10_ak1iu"]
+[ext_resource type="Script" uid="uid://btpe5aa8fcnbd" path="res://scripts/states/movement/fall_state.gd" id="11_28r1c"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ihjgv"]
 radius = 0.35
@@ -84,6 +83,4 @@ player_input = NodePath("../../PlayerInput")
 parent = NodePath("../..")
 
 [node name="AttackState" type="Node" parent="RewindableStateMachine"]
-script = ExtResource("12_fm80t")
-animation_name = "male_animation_lib/attack"
 metadata/_custom_type_script = "uid://dij2fvxmmxyn4"
