@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bx7qh4r1axu36"]
 
-[ext_resource type="PackedScene" uid="uid://nx3mxbxtrt2c" path="res://asssets/world/env/tree_palmTall.glb" id="1_so2jl"]
+[ext_resource type="PackedScene" uid="uid://nx3mxbxtrt2c" path="res://assets/world/env/tree_palmTall.glb" id="1_so2jl"]
 
 [node name="TreePalmTall" type="Node3D"]
 

@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dgwlatpc1rsm0"]
 
-[ext_resource type="PackedScene" uid="uid://dldfwd4periy5" path="res://asssets/world/env/rock_smallFlatA.glb" id="1_sqnpd"]
+[ext_resource type="PackedScene" uid="uid://dldfwd4periy5" path="res://assets/world/env/rock_smallFlatA.glb" id="1_sqnpd"]
 
 [node name="RockSmallFlatA" type="Node3D"]
 

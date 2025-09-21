@@ -7,7 +7,7 @@ class_name CameraInput extends Node3D
 
 var camera_basis : Basis = Basis.IDENTITY
 
-const CAMERA_MOUSE_ROTATION_SPEED := 0.001
+const CAMERA_MOUSE_ROTATION_SPEED := 0.005
 const CAMERA_X_ROT_MIN := deg_to_rad(-70)
 const CAMERA_X_ROT_MAX := deg_to_rad(60)
 const CAMERA_UP_DOWN_MOVEMENT = -1
@@ -21,12 +21,14 @@ func _ready():
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	else:
 		camera_3D.current = false
+		$CameraMount/CameraRot/Camera3D/ViewModel.visible = false
+		
 
 func _gather():
 	camera_basis = get_camera_rotation_basis()
 
 func _input(event):
-	if event is InputEventMouseMotion:
+	if event is InputEventMouseMotion and is_multiplayer_authority():
 		rotate_camera(event.relative * CAMERA_MOUSE_ROTATION_SPEED)
 
 func get_input_joystick(delta):

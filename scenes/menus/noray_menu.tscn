@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://bovdouhtnq13k"]
 
 [ext_resource type="Script" uid="uid://rx8jahp3fo6" path="res://scripts/menus/noray_menu.gd" id="1_v4v6j"]
-[ext_resource type="Theme" uid="uid://giidcej8oij7" path="res://asssets/ui/menu_theme.tres" id="1_xu2a1"]
+[ext_resource type="Theme" uid="uid://giidcej8oij7" path="res://assets/ui/menu_theme.tres" id="1_xu2a1"]
 
 [node name="NorayMenu" type="Control" node_paths=PackedStringArray("go_button", "back_button", "host_ip_input", "host_gameid_input", "option_label")]
 layout_mode = 3

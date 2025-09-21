@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://cuyb02c0nbxq3"]
+
+[ext_resource type="PackedScene" uid="uid://bpu5gh4vbgaep" path="res://assets/world/env/mod-castle/Walls/Walls_Full/Large_Gate.fbx" id="1_e43u0"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_e43u0"]
+size = Vector3(1, 1, 4.5)
+
+[node name="Large_Gate" instance=ExtResource("1_e43u0")]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." index="1"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.75)
+shape = SubResource("BoxShape3D_e43u0")

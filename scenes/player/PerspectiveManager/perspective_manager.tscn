@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://cfyc5cb0jodcf"]
+
+[ext_resource type="Script" uid="uid://br00uwkd7tr" path="res://scenes/player/PerspectiveManager/perspective_manager.gd" id="1_jvhwc"]
+
+[node name="PerspectiveManager" type="Node3D"]
+script = ExtResource("1_jvhwc")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]

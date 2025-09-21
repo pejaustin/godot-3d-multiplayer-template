@@ -1,0 +1,208 @@
+[gd_scene load_steps=20 format=3 uid="uid://bw45043vija8o"]
+
+[ext_resource type="PackedScene" uid="uid://btjx4a4g25xj3" path="res://scenes/network/multiplayer_manager.tscn" id="1_jlwa7"]
+[ext_resource type="PackedScene" uid="uid://cys03q34jt762" path="res://scenes/menus/in_game_menu.tscn" id="2_u1u8q"]
+[ext_resource type="Shape3D" uid="uid://b3p7215rpyj7p" path="res://scenes/world/env/BOUNDRY.tres" id="3_amemp"]
+[ext_resource type="PackedScene" uid="uid://deukdfofsqitg" path="res://assets/world/env/grass.glb" id="4_32jgm"]
+[ext_resource type="Material" uid="uid://dtbe06c2i0ktm" path="res://assets/world/world_material.tres" id="4_ugy4f"]
+[ext_resource type="PackedScene" uid="uid://0g3r7ijew0j3" path="res://scenes/world/env/tower.tscn" id="5_70a1q"]
+[ext_resource type="PackedScene" uid="uid://brlisvoeolipa" path="res://assets/world/env/stone_tallB.glb" id="7_xl84e"]
+[ext_resource type="Shader" uid="uid://bvl4kfacs2hfw" path="res://shaders/ps1+postprocess.gdshader" id="8_xl84e"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_unvu4"]
+sky_top_color = Color(0.431373, 0.721569, 0.933333, 1)
+sky_horizon_color = Color(0.937255, 0.529412, 0.388235, 1)
+
+[sub_resource type="Sky" id="Sky_sn0nk"]
+sky_material = SubResource("ProceduralSkyMaterial_unvu4")
+
+[sub_resource type="Environment" id="Environment_s4jie"]
+background_mode = 2
+sky = SubResource("Sky_sn0nk")
+ambient_light_color = Color(0.341176, 0.694118, 0.847059, 1)
+fog_light_energy = 0.46
+fog_density = 0.0681
+volumetric_fog_density = 0.0242
+volumetric_fog_albedo = Color(0.964706, 0.698039, 0.431373, 1)
+volumetric_fog_length = 50.0
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mqs41"]
+size = Vector3(0.5, 5, 9.5)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_lpk0h"]
+material = ExtResource("4_ugy4f")
+size = Vector2(30, 30)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_m5eq6"]
+data = PackedVector3Array(15, 0, 15, -15, 0, 15, 15, 0, -15, -15, 0, 15, -15, 0, -15, 15, 0, -15)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_70a1q"]
+size = Vector3(500, 5, 500)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_70a1q"]
+albedo_color = Color(0.1176, 0.21, 0.12376, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_70a1q"]
+material = SubResource("StandardMaterial3D_70a1q")
+size = Vector3(500, 5, 500)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_70a1q"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5nagr"]
+shader = ExtResource("8_xl84e")
+
+[node name="Game" type="Node3D"]
+
+[node name="PlayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("uid://xjygpllvas2q")
+spawn_path = NodePath("../World/PlayerSpawnPoint")
+
+[node name="MultiplayerManager" parent="." node_paths=PackedStringArray("_player_spawn_point") instance=ExtResource("1_jlwa7")]
+_player_spawn_point = NodePath("../World/PlayerSpawnPoint")
+
+[node name="InGameMenu" parent="." instance=ExtResource("2_u1u8q")]
+
+[node name="World" type="Node3D" parent="."]
+
+[node name="Atmosphere" type="Node3D" parent="World"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="World/Atmosphere"]
+transform = Transform3D(1, 0, 0, 0, 0.696001, 0.718041, 0, -0.718041, 0.696001, 0, 11.4862, 6.19946)
+light_color = Color(0.980392, 0.717647, 0.0470588, 1)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="World/Atmosphere"]
+environment = SubResource("Environment_s4jie")
+
+[node name="Env" type="Node3D" parent="World"]
+
+[node name="Perimeter" type="Node3D" parent="World/Env"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 153, 39.3021, 0)
+
+[node name="Boundry" type="StaticBody3D" parent="World/Env/Perimeter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.5, 0, 3.5)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Env/Perimeter/Boundry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -91, 2, 1.25)
+shape = SubResource("BoxShape3D_mqs41")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="World/Env/Perimeter/Boundry"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -87, 2, 5.75)
+shape = SubResource("BoxShape3D_mqs41")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="World/Env/Perimeter/Boundry"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -87, 2, -3.75)
+shape = SubResource("BoxShape3D_mqs41")
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="World/Env/Perimeter/Boundry"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -83.5, 2.5, -8.75)
+shape = SubResource("BoxShape3D_mqs41")
+
+[node name="Boundry2" type="StaticBody3D" parent="World/Env/Perimeter"]
+transform = Transform3D(-4.37114e-08, 3.48787e-16, 1, 3.48787e-16, 1, -3.48787e-16, -1, 3.48787e-16, -4.37114e-08, 2.08165e-12, 2.08165e-12, 2.08165e-12)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Env/Perimeter/Boundry2"]
+transform = Transform3D(-4.37114e-08, 1.85288e-22, -1, 6.97574e-16, 1, 0, 1, -6.97574e-16, -4.37114e-08, -17.5, 15, -77.5)
+shape = ExtResource("3_amemp")
+
+[node name="Boundry3" type="StaticBody3D" parent="World/Env/Perimeter"]
+transform = Transform3D(-4.37114e-08, 3.48787e-16, 1, 3.48787e-16, 1, -3.48787e-16, -1, 3.48787e-16, -4.37114e-08, 2.08165e-12, 2.08165e-12, -30)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Env/Perimeter/Boundry3"]
+transform = Transform3D(-4.37114e-08, 7.94093e-23, -1, 6.97574e-16, 1, 0, 1, -6.97574e-16, -4.37114e-08, -14.5, 2.5, -76.5)
+shape = ExtResource("3_amemp")
+
+[node name="Boundry4" type="StaticBody3D" parent="World/Env/Perimeter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 2.08165e-12, 2.08165e-12)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Env/Perimeter/Boundry4"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -91, 15, 2.08165e-12)
+shape = ExtResource("3_amemp")
+
+[node name="Stuff" type="Node3D" parent="World/Env"]
+
+[node name="grass2" parent="World/Env" instance=ExtResource("4_32jgm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, 0, -27.5)
+
+[node name="grass3" parent="World/Env" instance=ExtResource("4_32jgm")]
+transform = Transform3D(0.258819, 0, 0.965926, 0, 1, 0, -0.965926, 0, 0.258819, 31.6019, 0, 19.4812)
+
+[node name="grass4" parent="World/Env" instance=ExtResource("4_32jgm")]
+transform = Transform3D(-1, 0, 2.98023e-08, 0, 1, 0, -2.98023e-08, 0, -1, -36, 0, 20)
+
+[node name="grass5" parent="World/Env" instance=ExtResource("4_32jgm")]
+transform = Transform3D(-0.965926, 0, 0.258819, 0, 1, 0, -0.258819, 0, -0.965926, -34.7688, 0, -37.8519)
+
+[node name="MapSpawnPoint" type="Node3D" parent="World"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/MapSpawnPoint"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, -0.25, -0.25)
+mesh = SubResource("PlaneMesh_lpk0h")
+metadata/_edit_lock_ = true
+
+[node name="StaticBody3D" type="StaticBody3D" parent="World/MapSpawnPoint/MeshInstance3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/MapSpawnPoint/MeshInstance3D/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 70, 0, 0)
+shape = SubResource("ConcavePolygonShape3D_m5eq6")
+
+[node name="PlayerSpawnPoint" type="Node3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 71.9944, 40.9769, 1.018)
+
+[node name="Ground" type="StaticBody3D" parent="World"]
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Ground"]
+shape = SubResource("BoxShape3D_70a1q")
+metadata/_edit_lock_ = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Ground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3, 0)
+mesh = SubResource("BoxMesh_70a1q")
+metadata/_edit_lock_ = true
+
+[node name="Tower" parent="." instance=ExtResource("5_70a1q")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 75, -0.5, -0.5)
+
+[node name="Tower2" parent="." instance=ExtResource("5_70a1q")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -0.5, 0, 68)
+
+[node name="Tower3" parent="." instance=ExtResource("5_70a1q")]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -70, 0, 0)
+
+[node name="Tower4" parent="." instance=ExtResource("5_70a1q")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -0.5, 0, -62.5)
+
+[node name="SubViewport" type="SubViewport" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 71.5, 50, 11.5)
+cull_mask = 1048571
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 71.5207, 49.9242, 11.8033)
+texture = SubResource("ViewportTexture_70a1q")
+
+[node name="stone_tallB2" parent="." instance=ExtResource("7_xl84e")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.5, 0, -35.5)
+
+[node name="stone_tallB3" parent="." instance=ExtResource("7_xl84e")]
+transform = Transform3D(0.258819, 0, 0.965926, 0, 1, 0, -0.965926, 0, 0.258819, 20.8981, 0, 28.5188)
+
+[node name="stone_tallB4" parent="." instance=ExtResource("7_xl84e")]
+transform = Transform3D(-1, 0, 2.98023e-08, 0, 1, 0, -2.98023e-08, 0, -1, -24.5, 0, 28)
+
+[node name="stone_tallB5" parent="." instance=ExtResource("7_xl84e")]
+transform = Transform3D(-0.965926, 0, 0.258819, 0, 1, 0, -0.258819, 0, -0.965926, -25.7312, 0, -27.1481)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+visible = false
+material = SubResource("ShaderMaterial_5nagr")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2

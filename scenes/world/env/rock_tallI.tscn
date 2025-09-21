@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://btlc2d0qp6vmp"]
 
-[ext_resource type="PackedScene" uid="uid://bmjlvq3f00ghv" path="res://asssets/world/env/rock_tallI.glb" id="1_re4k2"]
+[ext_resource type="PackedScene" uid="uid://bmjlvq3f00ghv" path="res://assets/world/env/rock_tallI.glb" id="1_re4k2"]
 
 [node name="RockTallI" type="Node3D"]
 

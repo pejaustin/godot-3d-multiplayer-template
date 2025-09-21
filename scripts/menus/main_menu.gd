@@ -17,12 +17,7 @@ func _ready():
 func host_game():
 	print("Host game pressed")
 	_is_hosting = true
-	
-	# Has a secondary network option been selected for host
-	if NetworkManager.selected_network != NetworkManager.AvailableNetworks.ENET:
-		_show_secondary_network_options(true)
-	else:
-		NetworkManager.host_game(NetworkConnectionConfigs.new(NetworkManager.LOCALHOST))
+	_show_secondary_network_options(true)
 
 func join_game():
 	_show_secondary_network_options()
@@ -34,25 +29,23 @@ func _show_secondary_network_options(is_hosting: bool = false):
 	var active_secondary_menu = second_menu_to_load.instantiate()
 	
 	# Add whatever necessary configuration is required in the sub menu
-	if _is_hosting:
-		active_secondary_menu.menu_config_options = { "is_hosting": is_hosting }
+	active_secondary_menu.is_hosting =_is_hosting
 		
 	secondary_network_menu_parent.add_child(active_secondary_menu)
+	secondary_network_menu_parent.visible = true
 	
 	# Wire up completed and cancelled secondary menu signals
 	active_secondary_menu.secondary_menu_completed.connect(_secondary_menu_submitted)
 	active_secondary_menu.secondary_menu_cancelled.connect(_cancel_secondary_menu)
 
-func _secondary_menu_submitted(network_connection_configs: NetworkConnectionConfigs):
-	if _is_hosting:
-		NetworkManager.host_game(network_connection_configs)
-	else:
-		NetworkManager.join_game(network_connection_configs)
+func _secondary_menu_submitted():
+	NetworkManager.load_game_scene()
 
 func _reset_main_menu_options():
 	_is_hosting = false
 	host_game_button.visible = true
 	join_game_button.visible = true
+	$Menu.visible = true
 	
 	toggle_secondary_network_checkbox.visible = true
 	toggle_secondary_network_checkbox.set_pressed_no_signal(false) # reset secondary selection
@@ -62,6 +55,7 @@ func _reset_main_menu_options():
 func _hide_main_menu_options():
 	host_game_button.visible = false
 	join_game_button.visible = false
+	$Menu.visible = false
 	
 	toggle_secondary_network_checkbox.visible = false
 

@@ -1,0 +1,40 @@
+[gd_scene load_steps=5 format=3 uid="uid://dl267poljvrup"]
+
+[ext_resource type="Script" uid="uid://bnnfko7h6kf8t" path="res://scenes/menus/player_panel.gd" id="1_70jw1"]
+[ext_resource type="Texture2D" uid="uid://bfv81e0brewtv" path="res://assets/ui/icons/gamepad.png" id="1_j7rvx"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_m8s1v"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sprw6"]
+bg_color = Color(0.1172, 0.126193, 0.145413, 1)
+
+[node name="PlayerPanel" type="PanelContainer"]
+material = SubResource("CanvasItemMaterial_m8s1v")
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_sprw6")
+script = ExtResource("1_70jw1")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+alignment = 1
+
+[node name="PlayerName" type="Label" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Player Name"
+
+[node name="PlayerIcon" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("1_j7rvx")
+expand_mode = 2
+stretch_mode = 5

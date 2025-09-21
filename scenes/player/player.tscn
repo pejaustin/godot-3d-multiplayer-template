@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://xjygpllvas2q"]
+[gd_scene load_steps=15 format=3 uid="uid://xjygpllvas2q"]
 
 [ext_resource type="Script" uid="uid://bkgyb5d5m4se0" path="res://scripts/player.gd" id="1_hkxbp"]
 [ext_resource type="PackedScene" uid="uid://l1d8hwvn7hbq" path="res://scenes/player/camera_input.tscn" id="2_24wjx"]
@@ -11,6 +11,8 @@
 [ext_resource type="Script" uid="uid://bse11sjrcympt" path="res://scripts/states/movement/move_state.gd" id="9_yw7u2"]
 [ext_resource type="Script" uid="uid://blikma28g5cv" path="res://scripts/states/movement/jump_state.gd" id="10_ak1iu"]
 [ext_resource type="Script" uid="uid://btpe5aa8fcnbd" path="res://scripts/states/movement/fall_state.gd" id="11_28r1c"]
+[ext_resource type="PackedScene" uid="uid://cfyc5cb0jodcf" path="res://scenes/player/PerspectiveManager/perspective_manager.tscn" id="12_fm80t"]
+[ext_resource type="Resource" uid="uid://3ps5pptsmkx7" path="res://scenes/player/PerspectiveManager/basePerspective.tres" id="13_gx1jg"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ihjgv"]
 radius = 0.35
@@ -20,14 +22,26 @@ height = 2.8
 script = ExtResource("1_hkxbp")
 _player_input = NodePath("PlayerInput")
 _camera_input = NodePath("CameraInput")
-_player_model = NodePath("MilitaryMale")
+_player_model = NodePath("Model")
 _state_machine = NodePath("RewindableStateMachine")
 
 [node name="CameraInput" parent="." node_paths=PackedStringArray("rollback_synchronizer") instance=ExtResource("2_24wjx")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.964928, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.314, 0)
 rollback_synchronizer = NodePath("../RollbackSynchronizer")
 
-[node name="MilitaryMale" parent="." instance=ExtResource("4_fvytd")]
+[node name="Model" parent="." instance=ExtResource("4_fvytd")]
+
+[node name="Lich-applying" parent="Model/RootNode" index="0"]
+transform = Transform3D(1.71601, 0, 0, 0, 1.71601, 0, 0, 0, 1.71601, 0.0626569, 0, -0.0139697)
+
+[node name="Body" parent="Model/RootNode/Lich-applying/Armature/Skeleton3D" index="0"]
+layers = 2
+
+[node name="Head_001" parent="Model/RootNode/Lich-applying/Armature/Skeleton3D" index="1"]
+layers = 2
+
+[node name="hand" parent="Model/RootNode/Lich-applying/Armature/Skeleton3D" index="2"]
+transform = Transform3D(-0.997618, 0.0668426, 0.0170114, -0.0523994, -0.894863, 0.443255, 0.0448514, 0.441309, 0.896235, 0.345178, 0.66859, 0.0184955)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, 1.41129, 2.08165e-12)
@@ -39,13 +53,13 @@ script = ExtResource("2_e03e3")
 [node name="RollbackSynchronizer" type="Node" parent="." node_paths=PackedStringArray("root")]
 script = ExtResource("5_sf48l")
 root = NodePath("..")
-state_properties = Array[String]([":transform", ":velocity", "MilitaryMale:transform", "RewindableStateMachine:state"])
+state_properties = Array[String]([":transform", ":velocity", "Model:transform", "RewindableStateMachine:state"])
 input_properties = Array[String](["PlayerInput:input_dir", "PlayerInput:jump_input", "PlayerInput:run_input", "CameraInput:camera_basis"])
 
 [node name="TickInterpolator" type="Node" parent="." node_paths=PackedStringArray("root")]
 script = ExtResource("6_rwdl2")
 root = NodePath("..")
-properties = Array[String]([":transform", "MilitaryMale:transform"])
+properties = Array[String]([":transform", "Model:transform"])
 
 [node name="RewindableStateMachine" type="Node" parent="."]
 script = ExtResource("7_b1gbo")
@@ -54,7 +68,7 @@ script = ExtResource("7_b1gbo")
 script = ExtResource("8_lfiis")
 animation_name = "male_animation_lib/idle"
 camera_input = NodePath("../../CameraInput")
-player_model = NodePath("../../MilitaryMale")
+player_model = NodePath("../../Model")
 player_input = NodePath("../../PlayerInput")
 parent = NodePath("../..")
 
@@ -62,7 +76,7 @@ parent = NodePath("../..")
 script = ExtResource("9_yw7u2")
 animation_name = "male_animation_lib/walk"
 camera_input = NodePath("../../CameraInput")
-player_model = NodePath("../../MilitaryMale")
+player_model = NodePath("../../Model")
 player_input = NodePath("../../PlayerInput")
 parent = NodePath("../..")
 
@@ -70,7 +84,7 @@ parent = NodePath("../..")
 script = ExtResource("10_ak1iu")
 animation_name = "male_animation_lib/jump"
 camera_input = NodePath("../../CameraInput")
-player_model = NodePath("../../MilitaryMale")
+player_model = NodePath("../../Model")
 player_input = NodePath("../../PlayerInput")
 parent = NodePath("../..")
 
@@ -78,9 +92,20 @@ parent = NodePath("../..")
 script = ExtResource("11_28r1c")
 animation_name = "male_animation_lib/jump"
 camera_input = NodePath("../../CameraInput")
-player_model = NodePath("../../MilitaryMale")
+player_model = NodePath("../../Model")
 player_input = NodePath("../../PlayerInput")
 parent = NodePath("../..")
 
 [node name="AttackState" type="Node" parent="RewindableStateMachine"]
 metadata/_custom_type_script = "uid://dij2fvxmmxyn4"
+
+[node name="PerspectiveManager" parent="." node_paths=PackedStringArray("player", "bullet_raycast", "view_model_container", "world_model_container") instance=ExtResource("12_fm80t")]
+current_perspective = ExtResource("13_gx1jg")
+player = NodePath("..")
+bullet_raycast = NodePath("../CameraInput/CameraMount/CameraRot/Camera3D/RayCast3D")
+view_model_container = NodePath("../CameraInput/CameraMount/CameraRot/Camera3D/ViewModel")
+world_model_container = NodePath("../Model/RootNode/Lich-applying/Armature/Skeleton3D/hand")
+
+[editable path="CameraInput"]
+[editable path="Model"]
+[editable path="Model/RootNode/Lich-applying"]

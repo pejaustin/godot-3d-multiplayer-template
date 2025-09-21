@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://di5pdskv742wl"]
+
+[ext_resource type="PackedScene" uid="uid://mnpfb0usk7nq" path="res://assets/world/env/mod-castle/Floors&Ramps/Floors/Floor_2x2.fbx" id="1_feoo0"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_k0jig"]
+size = Vector3(4, 0.5, 4)
+
+[node name="Floor" instance=ExtResource("1_feoo0")]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." index="1"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -1)
+shape = SubResource("BoxShape3D_k0jig")
